@@ -1,0 +1,8 @@
+**/output
+transmitFiles
+**/*.exe
+**/__pycache__
+**/*.zip
+**/*.json
+**/*.log
+
