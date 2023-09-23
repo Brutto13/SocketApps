@@ -1,9 +1,8 @@
-from sqlite3 import SQLITE_DROP_TEMP_INDEX
 import tkinter as tk
 import socket
 import threading
 import json
-import ctypes
+
 
 from tkinter.messagebox import *
 
