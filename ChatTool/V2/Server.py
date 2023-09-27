@@ -125,7 +125,7 @@ def receive():
 
 Receive = threading.Thread(
     target=receive,
-    name='Server-RECV'
+    name='Server-RECV-1'
 )
 def lockEntrys():
     ent_ip.config(state='readonly')
@@ -140,6 +140,10 @@ def unlockEntrys():
     btn_start.config(state='normal')
 
 def start():
+    if int(ent_port.get()) <0 or int(ent_port.get()) > 65000:
+        showerror("Server", "The port must be a number between 0~6500")
+        return
+    
     try:
         global server
         server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -150,15 +154,18 @@ def start():
         showinfo('Server', f'Server hosted on {ent_ip.get()}:{ent_port.get()} succesfully!')
     except:
         showerror('Server', 'ValueError: Wrong or occupied port/IP number!')
+        
 
 
 
 def stop():    
-    if askokcancel('Server', 'Closing server will disconnect all clients.\nAre you sure you want to do this?'):
+    if askokcancel('Server', 'Closing server will disconnect all clients.\nAre you sure you want to do this?', icon='warning'):
         for client in clients:
             client.close()
+            clients.remove(client)
         
         showinfo('Server', 'Server closed succesfully!')
+        unlockEntrys()
 
 def SendMessage():
     try:
@@ -166,10 +173,13 @@ def SendMessage():
         broadcast(message)
         ent_message.delete(0, tk.END)
     except Exception as e:
-        showerror('Client', f'ERROR: {e}')
-
-
-
+        showerror('Server', f'Failed to send message \"{message}\"\n{e}')
+    
+    if clients == []:
+        showerror('Server', "You have no clients connected")
+        ent_message.delete(0, tk.END)
+    
+    
 btn_start = tk.Button(frm_buttons, text='Start Server', width=35, command=start)
 btn_stop = tk.Button(frm_buttons, text='Stop Server', width=35, command=stop)
 btn_send = tk.Button(frm_buttons, text='Send', command=SendMessage, width=35)
