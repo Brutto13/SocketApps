@@ -153,12 +153,12 @@ def start():
 
 
 
-def stop():
-    for client in clients:
-        client.close()
-    
-    stopped = True
-    quit()
+def stop():    
+    if askokcancel('Server', 'Closing server will disconnect all clients.\nAre you sure you want to do this?'):
+        for client in clients:
+            client.close()
+        
+        showinfo('Server', 'Server closed succesfully!')
 
 def SendMessage():
     try:
