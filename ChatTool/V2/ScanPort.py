@@ -16,7 +16,7 @@ logo = '''
       ## ##       ######### ##  ####    ##        ##     ## ##   ##      ##    
 ##    ## ##    ## ##     ## ##   ###    ##        ##     ## ##    ##     ##    
  ######   ######  ##     ## ##    ##    ##         #######  ##     ##    ##    
-                                                            '''
+'''
 
 print(Fore.LIGHTBLUE_EX + logo)
 print(Fore.LIGHTBLUE_EX + 'Welcome to this simple port scanning tool.')

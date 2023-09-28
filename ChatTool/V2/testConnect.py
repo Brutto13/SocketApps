@@ -28,7 +28,7 @@ def test():
             
         # returns an error indicator
         result = s.connect_ex((target,port))
-        if result ==0:
+        if result == 0:
             showinfo('Scanner', f'Port {port} is opened')
         else:
             showinfo('Scanner', f'Port {port} is closed')

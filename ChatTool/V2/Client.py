@@ -25,7 +25,7 @@ width = 20
 ent_ip = Entry(frm_data, width=width)
 ent_port = Entry(frm_data, width=width)
 ent_nick = Entry(frm_data, width=width)
-ent_message = Entry(frm_text, width=40)
+ent_message = Entry(frm_text, width=53)
 
 txt_Chat = Text(frm_text, width=40, state='disabled')
 
@@ -55,6 +55,17 @@ def receive():
                 client.close()
                 quit()
             
+            elif message == '<CLOSE>':
+                client.close()
+                showerror("Client", "Server closed the connection")
+                txt_Chat.config(state='normal')
+                txt_Chat.delete("0.0", END)
+                txt_Chat.config(state='disabled')
+                btn_leave.config(state='disabled')
+                btn_send.config(state='disabled')
+                btn_connect.config(state='normal')
+                unlockEntrys()
+            
 
             else:
                 # (message)
@@ -72,14 +83,19 @@ def write():
     ent_message.delete(0, END)
 
 def leave():
-    client.close()
-    # quit()
-    showinfo('Client', 'Chat left succesfully!')
-    unlockEntrys()
-    # quit()
-    txt_Chat.config(state='normal')
-    txt_Chat.delete("0.0", END)
-    txt_Chat.config(state='disabled')
+    if askyesno("Client", "Are you sure you wish to leave this chatroom?"):
+        client.close()
+        # quit()
+        
+        unlockEntrys()
+        # quit()
+        txt_Chat.config(state='normal')
+        txt_Chat.delete("0.0", END)
+        txt_Chat.config(state='disabled')
+        btn_leave.config(state='disabled')
+        btn_send.config(state='disabled')
+        btn_connect.config(state='normal')
+        showinfo("Client", "Chatroom left succesfully")
 
 Recv = threading.Thread(target=receive)
 
@@ -89,6 +105,9 @@ def ConnectToServer():
         lockEntrys()
         showinfo('Client', f'Connected to {ent_ip.get()}:{ent_port.get()}')
         Recv.start()
+        btn_leave.config(state='normal')
+        btn_send.config(state='normal')
+        btn_connect.config(state='disabled')
     except:
         showerror('Client', 'ValueError: Wrong or occupied port/IP number!')
 
@@ -96,8 +115,8 @@ def ConnectToServer():
 
 
 btn_connect = Button(frm_buttons, text='Connect', command=ConnectToServer, width=25)
-btn_leave = Button(frm_buttons, text='Leave', command=leave, width=25)
-btn_send = Button(frm_buttons, text='Send', command=write, width=25)
+btn_leave = Button(frm_buttons, text='Leave', command=leave, width=25, state='disabled')
+btn_send = Button(frm_buttons, text='Send', command=write, width=25, state='disabled')
 
 # grid
 
