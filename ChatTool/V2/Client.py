@@ -97,19 +97,30 @@ def leave():
         btn_connect.config(state='normal')
         showinfo("Client", "Chatroom left succesfully")
 
+
 Recv = threading.Thread(target=receive)
 
 def ConnectToServer():
-    try:
-        client.connect((ent_ip.get(), int(ent_port.get())))
-        lockEntrys()
-        showinfo('Client', f'Connected to {ent_ip.get()}:{ent_port.get()}')
-        Recv.start()
-        btn_leave.config(state='normal')
-        btn_send.config(state='normal')
-        btn_connect.config(state='disabled')
-    except:
-        showerror('Client', 'ValueError: Wrong or occupied port/IP number!')
+    done = False
+    while not done:
+        try:
+            client.connect((ent_ip.get(), int(ent_port.get())))
+            lockEntrys()
+            showinfo('Client', f'Connected to {ent_ip.get()}:{ent_port.get()}')
+            Recv.start()
+            btn_leave.config(state='normal')
+            btn_send.config(state='normal')
+            btn_connect.config(state='disabled')
+            return
+        except socket.gaierror:
+            if askretrycancel("Client", f"{ent_ip.get()}:{ent_port.get()} Not responding"):
+                done = False
+            else:
+                done = True
+        
+        except Exception as e:
+            showerror("Client - Fatal Error", "A fatal error occured:\n%s" % e)
+            done = True
 
 
 
