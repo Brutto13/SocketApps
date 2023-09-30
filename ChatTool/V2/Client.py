@@ -1,6 +1,8 @@
 import socket
 import threading
 
+# import tkinter as tk
+# from tkinter import Text, END
 from tkinter import *
 from tkinter.messagebox import *
 
@@ -101,6 +103,10 @@ def leave():
 Recv = threading.Thread(target=receive)
 
 def ConnectToServer():
+    if ent_nick.get() in ["ADMIN", "<SCAN>"]:
+        showerror("Client", "This nickname is not allowed!")
+        return
+    
     done = False
     while not done:
         try:
@@ -113,7 +119,7 @@ def ConnectToServer():
             btn_connect.config(state='disabled')
             return
         except socket.gaierror:
-            if askretrycancel("Client", f"{ent_ip.get()}:{ent_port.get()} Not responding"):
+            if askretrycancel("Client", f"{ent_ip.get()}:{ent_port.get()} Not responding!"):
                 done = False
             else:
                 done = True

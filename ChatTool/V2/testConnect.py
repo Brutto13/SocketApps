@@ -5,6 +5,7 @@ from tkinter.messagebox import *
 
 window = tk.Tk()
 window.title('Connection Tester')
+window.resizable(False, False)
 window.rowconfigure(0, minsize=0, weight=1)
 window.columnconfigure(1, minsize=0, weight=1)
 

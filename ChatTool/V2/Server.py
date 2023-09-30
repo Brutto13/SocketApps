@@ -51,7 +51,7 @@ ent_message = tk.Entry(frm_buttons, width=width-20)
 
 
 txt_log = tk.Text(width=width-10, state='disabled')
-# txt_clients = tk.Text(frm_buttons, width=width-30, height=15)
+txt_clients = tk.Text(frm_buttons, width=width-30, height=15, state='disabled')
 
 
 try:
@@ -65,7 +65,7 @@ except:
     pass
 
 
-def broadcast(message: str):
+def broadcast(message: bytes):
     for client in clients:
         client.send(message)
 
@@ -114,6 +114,9 @@ def receive():
                         target=handle,
                         args=(client,)
                     )
+                    txt_clients.config(state='normal')
+                    txt_clients.insert(tk.END, f"{ent_ip.get()} - {nickname}" + '\n')
+                    txt_clients.config(state='disabled')
                     thread.start()
                 else:
                     txt_log.config(state='normal')
@@ -128,6 +131,7 @@ Receive = threading.Thread(
     target=receive,
     name='Server-RECV-1'
 )
+
 def lockEntrys():
     ent_ip.config(state='readonly')
     ent_port.config(state='readonly')
@@ -207,7 +211,7 @@ btn_start.grid(row=0, column=0, padx=5, pady=5)
 btn_stop.grid(row=1, column=0, padx=5, pady=5)
 btn_send.grid(row=3, column=0, padx=5, pady=5)
 ent_message.grid(row=4, column=0, padx=5, pady=5)
-# txt_clients.grid(row=5, column=0)
+txt_clients.grid(row=5, column=0)
 ###################################################
 
 txt_log.grid(row=3, column=1, padx=5, pady=5)
